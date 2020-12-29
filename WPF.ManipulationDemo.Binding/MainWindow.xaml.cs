@@ -24,5 +24,10 @@ namespace WPF.ManipulationDemo.Binding
         {
             InitializeComponent();
         }
+
+        private void Rectangle_ManipulationStarting(object sender, ManipulationStartingEventArgs e)
+        {
+            e.ManipulationContainer = this;
+        }
     }
 }

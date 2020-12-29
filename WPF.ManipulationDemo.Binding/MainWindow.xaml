@@ -4,26 +4,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:WPF.ManipulationDemo.Binding"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         Title="MainWindow"
-        Width="525"
-        Height="350"
+        Width="1000"
+        Height="700"
         DataContext="{Binding Main,
                               Source={StaticResource Locator}}"
         mc:Ignorable="d">
     <Grid>
-        <Rectangle Width="300"
-                   Height="300"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="350"/>
+            <RowDefinition Height="350"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="500"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="LightBlue">
+            <Rectangle Width="{Binding RectWidth}"
+                   Height="{Binding RectHeight}"
                    Fill="Red"
                    IsManipulationEnabled="True"
-                   RenderTransform="{Binding RenderTransform}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="ManipulationDelta">
-                    <i:InvokeCommandAction Command="{Binding ManipulationDelta}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Rectangle>
+                   RenderTransform="{Binding RenderTransform}"
+                   ManipulationStarting="Rectangle_ManipulationStarting"
+                   >
+                <!--LayoutTransform="{Binding LayoutTransform}"-->
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="ManipulationDelta">
+                        <cmd:EventToCommand Command="{Binding ManipulationDelta}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Rectangle>
 
 
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="1" Background="LightPink">
+            <Ellipse Width="{Binding RectWidth}" Height="{Binding RectHeight}"
+                     Fill="GreenYellow"
+                     IsManipulationEnabled="True"
+                     RenderTransform="{Binding RenderTransform}"
+                     ManipulationStarting="Rectangle_ManipulationStarting">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="ManipulationDelta">
+                        <cmd:EventToCommand Command="{Binding ManipulationDelta}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </Ellipse>
+        </Grid>
+        
+        
     </Grid>
 </Window>

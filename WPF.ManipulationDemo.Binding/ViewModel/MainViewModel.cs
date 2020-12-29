@@ -21,7 +21,7 @@ namespace WPF.ManipulationDemo.Binding.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private TransformGroup transformGroup;
+        public TransformGroup transformGroup;
         private TranslateTransform translation;
         private ScaleTransform scale;
         private RotateTransform rotation;
@@ -45,6 +45,10 @@ namespace WPF.ManipulationDemo.Binding.ViewModel
 
         private void Initialize()
         {
+            RectWidth = 200;
+            RectHeight = 200;
+
+
             transformGroup = new TransformGroup();
 
             translation = new TranslateTransform(0, 0);
@@ -57,39 +61,60 @@ namespace WPF.ManipulationDemo.Binding.ViewModel
             transformGroup.Children.Add(translation);
         }
 
+        public double RectWidth { get; set; }
+        public double RectHeight { get; set; }
+
         public Transform RenderTransform
         {
             get
             {
-                return transform;
+                return transformGroup;
             }
             set
             {
-                if (value == transform) return;
-                transform = value;
-                RaisePropertyChanged<Transform>();
+                //if (value == transform) return;
+                //transform = value;
+                //RaisePropertyChanged<Transform>();
             }
         }
-        
-        public ICommand ManipulationDelta
+
+        public RelayCommand<ManipulationDeltaEventArgs> ManipulationDelta
             => new RelayCommand<ManipulationDeltaEventArgs>(OnManipulationDelta);
-        
+
         private void OnManipulationDelta(ManipulationDeltaEventArgs e)
         {
+            Point center = new Point(RectWidth / 2.0, RectHeight / 2.0);
             // apply the rotation at the center of the rectangle if it has changed
-            rotation.CenterX = e.ManipulationOrigin.X;
-            rotation.CenterY = e.ManipulationOrigin.Y;
+            rotation.CenterX = center.X;
+            rotation.CenterY = center.Y;
             rotation.Angle += e.DeltaManipulation.Rotation;
 
             // Scale is always uniform, by definition, so the x and y will always have the same magnitude
-            scale.CenterX = e.ManipulationOrigin.X;
-            scale.CenterY = e.ManipulationOrigin.Y;
+            scale.CenterX = center.X;
+            scale.CenterY = center.Y;
             scale.ScaleX *= e.DeltaManipulation.Scale.X;
             scale.ScaleY *= e.DeltaManipulation.Scale.Y;
 
             // apply translation
             translation.X += e.DeltaManipulation.Translation.X;
             translation.Y += e.DeltaManipulation.Translation.Y;
+
+
+
+            //// apply the rotation at the center of the rectangle if it has changed
+            //rotation.CenterX = e.ManipulationOrigin.X;
+            //rotation.CenterY = e.ManipulationOrigin.Y;
+            //rotation.Angle += e.DeltaManipulation.Rotation;
+
+            //// Scale is always uniform, by definition, so the x and y will always have the same magnitude
+            //scale.CenterX = e.ManipulationOrigin.X;
+            //scale.CenterY = e.ManipulationOrigin.Y;
+            //scale.ScaleX *= e.DeltaManipulation.Scale.X;
+            //scale.ScaleY *= e.DeltaManipulation.Scale.Y;
+
+            ////// apply translation
+            //translation.X += e.DeltaManipulation.Translation.X;
+            //translation.Y += e.DeltaManipulation.Translation.Y;
         }
     }
 }
